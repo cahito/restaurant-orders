@@ -46,6 +46,14 @@ def analise_mkt_nunca_dia(data, person):
     return dias_atendimento - dias_com_cliente
 
 
+def write_results(results):
+    try:
+        with open("data/mkt_campaign.txt", "a") as file:
+            file.write(results)
+    except ValueError:
+        raise ValueError
+
+
 def analyze_log(path_to_file: str):
     if not path_to_file.endswith(".csv"):
         raise FileNotFoundError(f"Extensão inválida: {path_to_file}")
@@ -61,10 +69,9 @@ def analyze_log(path_to_file: str):
     quantas_vezes_pediu = analise_mkt_vezes(dados, "arnaldo", "hamburguer")
     pratos_nunca_pedidos = analise_mkt_nunca_prato(dados, "joao")
     dias_que_nunca_veio = analise_mkt_nunca_dia(dados, "joao")
-    result = f"{prato_mais_pedido}\n{quantas_vezes_pediu}\n{pratos_nunca_pedidos}\n{dias_que_nunca_veio}\n"
+    result = f"""{prato_mais_pedido}
+{quantas_vezes_pediu}
+{pratos_nunca_pedidos}
+{dias_que_nunca_veio}"""
 
-    try:
-        with open("data/mkt_campaign.txt", "a") as file:
-            file.write(result)
-    except ValueError:
-        raise ValueError
+    write_results(result)
