@@ -21,6 +21,9 @@ class InventoryControl:
             self.estoque[ingrediente] = self.MINIMUM_INVENTORY[ingrediente]
 
     def add_new_order(self, customer, order, day):
+        pratos_disponiveis = self.get_available_dishes()
+        if order not in pratos_disponiveis:
+            return False
         for ingrediente in self.INGREDIENTS[order]:
             self.estoque[ingrediente] -= 1
 
@@ -32,3 +35,17 @@ class InventoryControl:
             )
 
         return result
+
+    def get_available_dishes(self):
+        pratos_disponiveis = set()
+        produtos_disponiveis = {
+            ingrediente
+            for ingrediente, quantidade in self.estoque.items()
+            if quantidade > 0
+        }
+
+        for prato, ingredientes in self.INGREDIENTS.items():
+            if set(ingredientes) <= produtos_disponiveis:
+                pratos_disponiveis.add(prato)
+
+        return pratos_disponiveis
